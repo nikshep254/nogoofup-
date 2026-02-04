@@ -46,10 +46,16 @@ export const getAIAnalysis = async (
     });
 
     const data = await response.json();
+    
+    if (data.error) {
+        console.error("OpenRouter API Error:", data.error);
+        return "AI analysis unavailable due to API error.";
+    }
+
     return data.choices?.[0]?.message?.content || "Analysis currently unavailable.";
 
   } catch (error) {
-    console.error("OpenRouter API Error:", error);
+    console.error("OpenRouter Fetch Error:", error);
     return "AI analysis could not be generated at this time. Please rely on the mathematical rank prediction below.";
   }
 };
@@ -83,6 +89,12 @@ export const getCollegeList = async (
         });
         
         const data = await response.json();
+        
+        if (data.error) {
+             console.error("OpenRouter API Error (Colleges):", data.error);
+             return [];
+        }
+
         const text = data.choices?.[0]?.message?.content;
         
         if (!text) return [];
