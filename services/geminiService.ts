@@ -1,8 +1,10 @@
 import { UserInput, CalculatedMetrics } from "../types";
 
-const API_KEY = "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";
+// OpenRouter Configuration
+const API_KEY = "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";
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
-const MODEL = "google/gemini-2.0-flash-lite-preview-02-05:free"; // High speed, free tier model
+// Using a reliable model via OpenRouter (Gemini 2.0 Pro Experimental Free)
+const MODEL = "google/gemini-2.0-pro-exp-02-05:free"; 
 
 export const getAIAnalysis = async (
   input: UserInput,
@@ -34,7 +36,7 @@ export const getAIAnalysis = async (
       headers: {
         "Authorization": `Bearer ${API_KEY}`,
         "Content-Type": "application/json",
-        "HTTP-Referer": window.location.origin,
+        "HTTP-Referer": typeof window !== 'undefined' ? window.location.origin : "https://nogoofup-rank-predictor.com",
         "X-Title": "nogoofup Rank Predictor",
       },
       body: JSON.stringify({
@@ -45,17 +47,23 @@ export const getAIAnalysis = async (
       })
     });
 
+    if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`OpenRouter API Error: ${response.status} ${response.statusText}`, errorText);
+        return "AI analysis is currently experiencing high traffic. Please refer to the rank and college predictions below.";
+    }
+
     const data = await response.json();
     
     if (data.error) {
-        console.error("OpenRouter API Error:", data.error);
-        return "AI analysis unavailable due to API error.";
+        console.error("OpenRouter API Error Response:", data.error);
+        return "AI analysis unavailable due to service limits.";
     }
 
     return data.choices?.[0]?.message?.content || "Analysis currently unavailable.";
 
   } catch (error) {
-    console.error("OpenRouter Fetch Error:", error);
+    console.error("AI Service Error:", error);
     return "AI analysis could not be generated at this time. Please rely on the mathematical rank prediction below.";
   }
 };
@@ -68,8 +76,11 @@ export const getCollegeList = async (
         const prompt = `
           Based on JEE Main Rank ${metrics.rank} (AIR) and Category Rank ${metrics.categoryRank} (${input.category}), generate a JSON list of 5 likely college options.
           Consider Home State Quota for ${input.state}.
+          
+          Strictly output valid JSON only. No markdown formatting. No code blocks.
+          
           Format: Array of objects with keys: "name", "branch", "probability" (High/Medium/Low).
-          Return ONLY valid JSON. Do not use markdown code blocks. Just the raw JSON array.
+          Example: [{"name": "NIT Trichy", "branch": "Civil", "probability": "Low"}]
         `;
 
         const response = await fetch(OPENROUTER_URL, {
@@ -77,7 +88,7 @@ export const getCollegeList = async (
             headers: {
               "Authorization": `Bearer ${API_KEY}`,
               "Content-Type": "application/json",
-              "HTTP-Referer": window.location.origin,
+              "HTTP-Referer": typeof window !== 'undefined' ? window.location.origin : "https://nogoofup-rank-predictor.com",
               "X-Title": "nogoofup Rank Predictor",
             },
             body: JSON.stringify({
@@ -88,6 +99,12 @@ export const getCollegeList = async (
             })
         });
         
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error(`College List API Error: ${response.status}`, errorText);
+            return [];
+        }
+
         const data = await response.json();
         
         if (data.error) {
@@ -99,18 +116,18 @@ export const getCollegeList = async (
         
         if (!text) return [];
 
-        // Simple cleanup if the model adds markdown
-        const cleanText = text.replace(/```json\n?|```/g, '').trim();
+        // Aggressive cleanup to ensure JSON parsing works
+        const cleanText = text.replace(/```json/g, '').replace(/```/g, '').trim();
         
         try {
             const parsed = JSON.parse(cleanText);
-            // Handle if it returns { "colleges": [...] }
+            // Handle wrapper object if present
             if (!Array.isArray(parsed) && parsed.colleges && Array.isArray(parsed.colleges)) {
                 return parsed.colleges;
             }
             return Array.isArray(parsed) ? parsed : [];
         } catch (e) {
-            console.error("JSON Parsing failed", e);
+            console.error("JSON Parsing failed for colleges", e);
             return [];
         }
     } catch (e) {
