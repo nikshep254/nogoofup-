@@ -48,21 +48,21 @@ const PredictionForm: React.FC<Props> = ({ onSubmit, isLoading, initialData }) =
   };
 
   return (
-    <div id="prediction-form" className="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-xl border border-slate-100 mb-20 relative z-10">
+    <div id="prediction-form" className="max-w-xl mx-auto bg-slate-900 p-8 rounded-2xl shadow-xl shadow-slate-950/50 border border-slate-800 mb-20 relative z-10">
       <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-slate-900">Enter Your Details</h2>
-        <p className="text-slate-500 text-sm mt-1">Provide subject-wise marks for accurate analysis</p>
+        <h2 className="text-2xl font-bold text-white">Enter Your Details</h2>
+        <p className="text-slate-400 text-sm mt-1">Provide subject-wise marks for accurate analysis</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">Name</label>
+            <label className="block text-sm font-medium text-slate-300 mb-2">Name</label>
             <input
                 type="text"
                 required
                 value={formData.name}
                 onChange={(e) => setFormData({...formData, name: e.target.value})}
-                className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none"
+                className="w-full px-4 py-3 rounded-lg bg-slate-950 border border-slate-700 text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none placeholder-slate-600"
                 placeholder="Your Name"
             />
         </div>
@@ -70,59 +70,59 @@ const PredictionForm: React.FC<Props> = ({ onSubmit, isLoading, initialData }) =
         {/* Subject Marks Inputs */}
         <div className="grid grid-cols-3 gap-4">
             <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1">Physics</label>
+                <label className="block text-xs font-semibold text-slate-400 mb-1">Physics</label>
                 <input
                     type="number"
                     min="0"
                     max="100"
                     value={formData.marks.physics || ''}
                     onChange={(e) => handleSubjectChange('physics', e.target.value)}
-                    className="w-full px-3 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none text-center font-mono"
+                    className="w-full px-3 py-3 rounded-lg bg-slate-950 border border-slate-700 text-white focus:ring-2 focus:ring-brand-500 outline-none text-center font-mono"
                     placeholder="0-100"
                 />
             </div>
             <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1">Chemistry</label>
+                <label className="block text-xs font-semibold text-slate-400 mb-1">Chemistry</label>
                 <input
                     type="number"
                     min="0"
                     max="100"
                     value={formData.marks.chemistry || ''}
                     onChange={(e) => handleSubjectChange('chemistry', e.target.value)}
-                    className="w-full px-3 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none text-center font-mono"
+                    className="w-full px-3 py-3 rounded-lg bg-slate-950 border border-slate-700 text-white focus:ring-2 focus:ring-brand-500 outline-none text-center font-mono"
                     placeholder="0-100"
                 />
             </div>
             <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1">Maths</label>
+                <label className="block text-xs font-semibold text-slate-400 mb-1">Maths</label>
                 <input
                     type="number"
                     min="0"
                     max="100"
                     value={formData.marks.maths || ''}
                     onChange={(e) => handleSubjectChange('maths', e.target.value)}
-                    className="w-full px-3 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 outline-none text-center font-mono"
+                    className="w-full px-3 py-3 rounded-lg bg-slate-950 border border-slate-700 text-white focus:ring-2 focus:ring-brand-500 outline-none text-center font-mono"
                     placeholder="0-100"
                 />
             </div>
         </div>
 
-        <div className="flex justify-between items-center bg-slate-50 p-3 rounded-lg border border-slate-200">
-            <span className="text-sm text-slate-600 font-medium">Total Marks:</span>
-            <span className={`text-xl font-bold ${formData.totalMarks > 300 ? 'text-red-500' : 'text-brand-600'}`}>
+        <div className="flex justify-between items-center bg-slate-950 p-3 rounded-lg border border-slate-800">
+            <span className="text-sm text-slate-400 font-medium">Total Marks:</span>
+            <span className={`text-xl font-bold ${formData.totalMarks > 300 ? 'text-red-500' : 'text-brand-500'}`}>
                 {formData.totalMarks} / 300
             </span>
         </div>
 
         {/* Category Input */}
         <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
+            <label className="block text-sm font-medium text-slate-300 mb-2">
                 Category
             </label>
             <select
                 value={formData.category}
                 onChange={(e) => setFormData({...formData, category: e.target.value as Category})}
-                className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-colors outline-none bg-white"
+                className="w-full px-4 py-3 rounded-lg bg-slate-950 border border-slate-700 text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-colors outline-none"
             >
                 {Object.values(Category).map((cat) => (
                     <option key={cat} value={cat}>{cat}</option>
@@ -132,13 +132,13 @@ const PredictionForm: React.FC<Props> = ({ onSubmit, isLoading, initialData }) =
 
         {/* State Input */}
         <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
+            <label className="block text-sm font-medium text-slate-300 mb-2">
                 Home State
             </label>
             <select
                 value={formData.state}
                 onChange={(e) => setFormData({...formData, state: e.target.value})}
-                className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-colors outline-none bg-white"
+                className="w-full px-4 py-3 rounded-lg bg-slate-950 border border-slate-700 text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-colors outline-none"
             >
                 {STATES.map((state) => (
                     <option key={state} value={state}>{state}</option>
@@ -149,10 +149,10 @@ const PredictionForm: React.FC<Props> = ({ onSubmit, isLoading, initialData }) =
         <button
             type="submit"
             disabled={isLoading || formData.totalMarks === 0}
-            className={`w-full py-4 px-6 rounded-xl text-white font-bold text-lg shadow-md transition-all
+            className={`w-full py-4 px-6 rounded-xl text-white font-bold text-lg shadow-lg transition-all
                 ${(isLoading || formData.totalMarks === 0) 
-                    ? 'bg-slate-400 cursor-not-allowed' 
-                    : 'bg-brand-600 hover:bg-brand-700 hover:shadow-lg active:scale-[0.98]'
+                    ? 'bg-slate-700 cursor-not-allowed text-slate-400' 
+                    : 'bg-brand-600 hover:bg-brand-500 shadow-brand-500/20 hover:shadow-brand-500/40 active:scale-[0.98]'
                 }`}
         >
             {isLoading ? (
